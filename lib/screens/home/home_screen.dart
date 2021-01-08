@@ -26,11 +26,10 @@ class HomeScreen extends StatelessWidget {
                     onTap: () => Navigator.pushNamed(context, TakePhotoScreen.routeName),
                     child: Column(
                       children: [
-                        Icon(
-                          Icons.camera_alt_rounded,
-                          color: Colors.lightGreen[800],
-                          size: 80,
-                        ),
+                        Image.asset(Images.cameraLogo,height: 100, width: 100,),
+                          //
+                          // size: 80,
+
                         SizedBox(
                           height: 6,
                         ),
@@ -47,8 +46,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    Icon(Icons.add_photo_alternate_rounded,
-                        color: Colors.lightGreen[800], size: 80),
+                    Image.asset(Images.uploadLogo, height: 100, width: 100,),
                     SizedBox(
                       height: 6,
                     ),
