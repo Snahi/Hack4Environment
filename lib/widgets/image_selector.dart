@@ -24,8 +24,8 @@ class Clipper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        key: _imageContainerKey,
         width: double.infinity,
-        color: Colors.black,
         child: Stack(
           children: [
             Center(
@@ -33,8 +33,7 @@ class Clipper extends StatelessWidget {
                 width: double.infinity,
                 child: Image.file(
                   File(imgPath),
-                  key: _imageContainerKey,
-                  fit: BoxFit.fitWidth,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),

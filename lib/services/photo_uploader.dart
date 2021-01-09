@@ -3,18 +3,25 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:hack4environment/models/bounding_box.dart';
 
-class ServerBoundingBox {
+class _ServerBoundingBox {
   final double xStart;
   final double yStart;
   final double width;
   final double height;
 
-  ServerBoundingBox({
+  _ServerBoundingBox({
     this.xStart,
     this.yStart,
     this.width,
     this.height,
   });
+
+  Map<String, dynamic> toJson() => {
+        'xStart': xStart,
+        'yStart': yStart,
+        'width': width,
+        'height': height,
+      };
 }
 
 class _ServerLabel {
@@ -23,6 +30,10 @@ class _ServerLabel {
   _ServerLabel({
     this.name,
   });
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+      };
 }
 
 class PhotoUploader {
@@ -37,8 +48,10 @@ class PhotoUploader {
     Dio dio = Dio();
     FormData formData = FormData.fromMap({
       paramImg: await MultipartFile.fromFile(imgPath),
-      paramBoundingBoxes: jsonEncode(_convertBoxes(boxes)),
-      paramLabels: jsonEncode(_getLabels(boxes)),
+      paramBoundingBoxes: jsonEncode(_convertBoxes(boxes),
+          toEncodable: (e) => (e as _ServerBoundingBox).toJson()),
+      paramLabels: jsonEncode(_getLabels(boxes),
+          toEncodable: (e) => (e as _ServerLabel).toJson()),
     });
     try {
       var response = await dio.post(apiUrl, data: formData);
@@ -54,10 +67,10 @@ class PhotoUploader {
     return success;
   }
 
-  static List<ServerBoundingBox> _convertBoxes(List<BoundingBox> raw) {
-    List<ServerBoundingBox> out = [];
+  static List<_ServerBoundingBox> _convertBoxes(List<BoundingBox> raw) {
+    List<_ServerBoundingBox> out = [];
     raw.forEach((element) {
-      out.add(ServerBoundingBox(
+      out.add(_ServerBoundingBox(
         xStart: element.x,
         yStart: element.y,
         width: element.width,
@@ -69,7 +82,7 @@ class PhotoUploader {
   }
 
   static List<_ServerLabel> _getLabels(List<BoundingBox> boxes) {
-    List<_ServerLabel> out;
+    List<_ServerLabel> out = [];
     boxes.forEach((element) {
       out.add(_ServerLabel(name: element.label));
     });

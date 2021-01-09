@@ -13,6 +13,9 @@ class Strings {
       'Wrong username or password! Try again.';
   static const String submitPhoto = 'Submit';
   static const String nextLabel = 'Next label';
+  static const String oops = 'Ooops';
+  static const String tryAgainLater =
+      'Something went wrong. Please try again later.';
 
   static const labels = [
     'bio',
