@@ -13,11 +13,13 @@ class Strings {
   static const String loginSignUp = 'Sign Up';
   static const String loginForgotPassword = 'Forgot password?';
   static const String loginEmptyField = 'This field must not be empty!';
-  static const String loginWrongUsernameOrPassword = 'Wrong username or password! Try again.';
+  static const String loginWrongUsernameOrPassword =
+      'Wrong username or password! Try again.';
   static const String signUpText = 'Sign Up';
   static const String signUpEmailHintText = 'Email';
   static const String signUpRepeatPasswordHintText = 'Repeat Password';
-  static const String signUpUsernameExits = 'This name has already been taken. Please select different user name.';
+  static const String signUpUsernameExits =
+      'This name has already been taken. Please select different user name.';
   static const String signUpPasswordsNotTheSame = 'Passwords must be the same!';
   static const String signUpGoBackText = 'Back';
   static const String submitPhoto = 'Submit';
@@ -25,6 +27,7 @@ class Strings {
   static const String oops = 'Ooops';
   static const String tryAgainLater =
       'Something went wrong. Please try again later.';
+  static const String challengeUser = 'Challenge another user!';
 
   static const labels = [
     'bio',

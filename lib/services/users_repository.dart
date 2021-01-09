@@ -14,4 +14,8 @@ class UsersRepository {
       User('username9', 'email9', 'password1'),
     ];
   }
+
+  Future<bool> challengeUser(String username) async {
+    return true;
+  }
 }
