@@ -15,6 +15,7 @@ class Strings {
   static const String loginEmptyField = 'This field must not be empty!';
   static const String loginWrongUsernameOrPassword = 'Wrong username or password! Try again.';
   static const String signUpText = 'Sign Up';
+  static const String signUpCreateAccount = 'Create Account';
   static const String signUpEmailHintText = 'Email';
   static const String signUpRepeatPasswordHintText = 'Repeat Password';
   static const String signUpUsernameExits = 'This name has already been taken. Please select different user name.';
