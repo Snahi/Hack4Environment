@@ -5,6 +5,7 @@ import 'package:hack4environment/resources/c_colors.dart';
 import 'package:hack4environment/resources/images.dart';
 import 'package:hack4environment/resources/strings.dart';
 import 'package:hack4environment/screens/home/home_screen.dart';
+import 'package:hack4environment/screens/signup/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = 'LoginScreen';
@@ -14,15 +15,15 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final usernameTextFieldController = TextEditingController();
+  final _usernameTextFieldController = TextEditingController();
 
-  final passwordTextFieldController = TextEditingController();
+  final _passwordTextFieldController = TextEditingController();
 
-  Color usernameTextFieldBorderColor = CColors.lightBlack;
-  Color passwordTextFieldBorderColor = CColors.lightBlack;
-  bool usernameWarningVisibility = false;
-  bool passwordWarningVisibility = false;
-  String warningMessage = Strings.loginEmptyField;
+  Color _usernameTextFieldBorderColor = CColors.lightBlack;
+  Color _passwordTextFieldBorderColor = CColors.lightBlack;
+  bool _usernameWarningVisibility = false;
+  bool _passwordWarningVisibility = false;
+  String _warningMessage = Strings.loginEmptyField;
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +62,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 20,
                     ),
                     Visibility(
-                        visible: usernameWarningVisibility,
+                        visible: _usernameWarningVisibility,
                         child: Text(
-                          warningMessage,
+                          _warningMessage,
                           style: TextStyle(
                             fontSize: 16,
                             color: CColors.red,
@@ -73,13 +74,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: TextField(
                         onTap: () {
                           setState(() {
-                            usernameTextFieldBorderColor = CColors.lightBlack;
-                            usernameWarningVisibility = false;
+                            _usernameTextFieldBorderColor = CColors.lightBlack;
+                            _usernameWarningVisibility = false;
                           });
                         },
-                        controller: usernameTextFieldController,
+                        controller: _usernameTextFieldController,
                         autocorrect: true,
                         decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.person,
+                             color: CColors.darkPurple
+                          ),
                           hintText: Strings.loginUsernameHint,
                           hintStyle: TextStyle(color: CColors.gray),
                           filled: true,
@@ -88,13 +93,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(18.0)),
                             borderSide: BorderSide(
-                                color: usernameTextFieldBorderColor, width: 2),
+                                color: _usernameTextFieldBorderColor, width: 2),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20.0)),
                             borderSide: BorderSide(
-                                color: usernameTextFieldBorderColor, width: 3),
+                                color: _usernameTextFieldBorderColor, width: 3),
                           ),
                         ),
                       ),
@@ -105,8 +110,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 18,
                     ),
                     Visibility(
-                        visible: passwordWarningVisibility,
-                        child: Text(warningMessage,
+                        visible: _passwordWarningVisibility,
+                        child: Text(_warningMessage,
                             style: TextStyle(
                               fontSize: 16,
                               color: CColors.red,
@@ -115,14 +120,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: TextField(
                         onTap: () {
                           setState(() {
-                            passwordTextFieldBorderColor = CColors.lightBlack;
-                            passwordWarningVisibility = false;
+                            _passwordTextFieldBorderColor = CColors.lightBlack;
+                            _passwordWarningVisibility = false;
                           });
                         },
-                        controller: passwordTextFieldController,
+                        controller: _passwordTextFieldController,
                         autocorrect: true,
                         obscureText: true,
                         decoration: InputDecoration(
+                          prefixIcon: Icon(
+                              Icons.vpn_key_rounded,
+                              color: CColors.darkPurple
+                          ),
                           hintText: Strings.loginPasswordHint,
                           hintStyle: TextStyle(color: CColors.gray),
                           filled: true,
@@ -131,13 +140,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(18.0)),
                             borderSide: BorderSide(
-                                color: passwordTextFieldBorderColor, width: 2),
+                                color: _passwordTextFieldBorderColor, width: 2),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20.0)),
                             borderSide: BorderSide(
-                                color: passwordTextFieldBorderColor, width: 3),
+                                color: _passwordTextFieldBorderColor, width: 3),
                           ),
                         ),
                       ),
@@ -167,23 +176,23 @@ class _LoginScreenState extends State<LoginScreen> {
                           String password = "1234";
 
                           String usernameTextFieldText =
-                              usernameTextFieldController.text;
+                              _usernameTextFieldController.text;
                           String passwordTextFieldText =
-                              passwordTextFieldController.text;
+                              _passwordTextFieldController.text;
 
                           if (usernameTextFieldText.isEmpty ||
                               passwordTextFieldText.isEmpty) {
                             if (usernameTextFieldText.isEmpty) {
                               setState(() {
-                                warningMessage = Strings.loginEmptyField;
-                                usernameTextFieldBorderColor = CColors.red;
-                                usernameWarningVisibility = true;
+                                _warningMessage = Strings.loginEmptyField;
+                                _usernameTextFieldBorderColor = CColors.red;
+                                _usernameWarningVisibility = true;
                               });
                             } if (passwordTextFieldText.isEmpty) {
                               setState(() {
-                                warningMessage = Strings.loginEmptyField;
-                                passwordTextFieldBorderColor = CColors.red;
-                                passwordWarningVisibility = true;
+                                _warningMessage = Strings.loginEmptyField;
+                                _passwordTextFieldBorderColor = CColors.red;
+                                _passwordWarningVisibility = true;
                               });
                             }
                           } else {
@@ -194,9 +203,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               print("Logged in");
                             } else {
                               setState(() {
-                                warningMessage =
+                                _warningMessage =
                                     Strings.loginWrongUsernameOrPassword;
-                                usernameWarningVisibility = true;
+                                _usernameWarningVisibility = true;
                               });
                             }
                           }
@@ -222,6 +231,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 BorderSide(width: 2, color: CColors.lightBlack),
                             borderRadius: BorderRadius.circular(20)),
                         onPressed: () {
+                          Navigator.pushNamed(context, SignUpScreen.routeName);
                           print("Signing up");
                         },
                         child: Text(
