@@ -1,14 +1,13 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:hack4environment/models/ranking.dart';
 import 'package:hack4environment/resources/api.dart';
 import 'package:hack4environment/resources/c_colors.dart';
 import 'package:hack4environment/resources/images.dart';
 import 'package:hack4environment/resources/strings.dart';
 import 'package:hack4environment/screens/labelling/labelling_screen.dart';
 import 'package:image_picker/image_picker.dart';
-
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = 'HomeScreen';
@@ -18,17 +17,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<RankUser> _topUsers = [];
   String _selectedTop = Strings.topUsers[1];
+  List<Widget> topUsersChildren = <Widget>[];
+
+  @override
+  void initState() {
+    super.initState();
+    updateRanking();
+  }
 
   @override
   Widget build(BuildContext context) {
-    _topUsers.add(RankUser("Majkel", 1, 150.0));
-    _topUsers.add(RankUser("Snahi", 2, 140.0));
-    _topUsers.add(RankUser("DzikiPaweł", 3, 125.0));
-    _topUsers.add(RankUser("Staszkicjusz", 4, 100.0));
-    _topUsers.add(RankUser("PanAdam", 5, 95.0));
-    _topUsers.add(RankUser("CurrentUser", 40, 25.0));
+    // _topUsersItems.add(RankUser("Majkel", 1, 150.0));
+    // _topUsers.add(RankUser("Snahi", 2, 140.0));
+    // _topUsers.add(RankUser("DzikiPaweł", 3, 125.0));
+    // _topUsers.add(RankUser("Staszkicjusz", 4, 100.0));
+    // _topUsers.add(RankUser("PanAdam", 5, 95.0));
+    // _topUsers.add(RankUser("CurrentUser", 40, 25.0));
 
     // Scaffold is a layout for the major Material Components.
     return Scaffold(
@@ -44,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Column(
                   children: [
                     Row(children: [
-                      SizedBox(width: 90),
+                      SizedBox(width: 70),
                       Text(
                         Strings.homeRankingTitle,
                         style: TextStyle(
@@ -55,20 +60,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         width: 20,
                       ),
-                      Container(
-                        width: 50,
-                        child :_buildTopDropdown()),
+                      Container(width: 50, child: _buildTopDropdown()),
                       SizedBox(
                         width: 20,
-                      ),
-                      GestureDetector(
-                          child: Icon(Icons.refresh_rounded,
-                              color: CColors.darkGreen, size: 20),
-                          onTap: () {
-                            updateRanking();
-                          }),
+                      )
                     ]),
-                    SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -100,30 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 300,
                       child: ListView(
                         padding: EdgeInsets.all(5),
-                        children: [
-
-                          _getListItemContainer(_topUsers[0]),
-                          SizedBox(
-                            height: 2,
-                          ),
-                          _getListItemContainer(_topUsers[1]),
-                          SizedBox(
-                            height: 2,
-                          ),
-                          _getListItemContainer(_topUsers[2]),
-                          SizedBox(
-                            height: 2,
-                          ),
-                          _getListItemContainer(_topUsers[3]),
-                          SizedBox(
-                            height: 2,
-                          ),
-                          _getListItemContainer(_topUsers[4]),
-                          SizedBox(
-                            height: 2,
-                          ),
-                          _getListItemContainer(_topUsers[5])
-                        ],
+                        children: topUsersChildren,
                       ),
                     ),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -299,35 +272,60 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   Widget _buildTopDropdown() => DropdownButton<String>(
-    value: _selectedTop,
-    isExpanded: true,
-    items: Strings.topUsers.map((String value) {
-      return new DropdownMenuItem<String>(
-        value: value,
-        child: new Text(value),
+        value: _selectedTop,
+        isExpanded: true,
+        items: Strings.topUsers.map((String value) {
+          return new DropdownMenuItem<String>(
+            value: value,
+            child: new Text(value),
+          );
+        }).toList(),
+        onChanged: (newValue) {
+          setState(() {
+            _selectedTop = newValue;
+            updateRanking();
+          });
+        },
       );
-    }).toList(),
-    onChanged: (newValue) {
-      setState(() {
-        _selectedTop = newValue;
-      });
-    },
-  );
 
-   updateRanking() async {
+  updateRanking() async {
     Dio dio = Dio();
-    _topUsers = new List();
-    try {
-      var response = await dio.get(Api.urlRanking + 5.toString());
 
-      print(response);
+    try {
+      var response = await dio.get(Api.urlRanking + _selectedTop);
+
+      topUsersChildren.clear();
+
+      List<Ranking> rankings;
+      // print(jsonDecode(response.data));
+      rankings =
+          (response.data as List).map((i) => Ranking.fromJson(i)).toList();
+
+      rankings.sort((a, b) => b.points.compareTo(a.points));
+      print(_selectedTop);
+      print(rankings[0].user);
+
+      setState(() {
+        List<Widget> newChildren = <Widget>[];
+        for (var i = 0; i < rankings.length; i++) {
+          var rankSingle = rankings[i];
+
+          newChildren.add(_getListItemContainer(
+              RankUser(rankSingle.user, i + 1, rankSingle.points)));
+          newChildren.add(SizedBox(
+            height: 2,
+          ));
+
+          topUsersChildren = newChildren;
+        }
+      });
+
+      // print(response.data);
     } catch (e) {
       print(e);
     }
   }
-
 }
 
 class RankUser {
@@ -342,4 +340,9 @@ class RankUser {
   double get points => _points;
 
   RankUser(this._user, this._rankPos, this._points);
+
+  RankUser.fromJson(Map<String, dynamic> json)
+      : _user = json['username'],
+        _rankPos = 0,
+        _points = json['points'];
 }
