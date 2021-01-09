@@ -6,8 +6,6 @@ import 'package:hack4environment/resources/api.dart';
 import 'package:hack4environment/resources/c_colors.dart';
 import 'package:hack4environment/resources/images.dart';
 import 'package:hack4environment/resources/strings.dart';
-import 'package:progress_state_button/progress_button.dart';
-import 'package:progress_state_button/iconed_button.dart';
 import 'package:hack4environment/screens/home/home_screen.dart';
 import 'package:hack4environment/screens/signup/signup_screen.dart';
 import 'package:dio/dio.dart';
@@ -230,14 +228,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 BorderSide(width: 2, color: CColors.lightBlack),
                             borderRadius: BorderRadius.circular(20)),
                         onPressed: () async {
+                          String username = _usernameTextFieldController.text;
+                          String password = _passwordTextFieldController.text;
 
-                          String username =
-                              _usernameTextFieldController.text;
-                          String password =
-                              _passwordTextFieldController.text;
-
-                          if (username.isEmpty ||
-                              password.isEmpty) {
+                          if (username.isEmpty || password.isEmpty) {
                             if (username.isEmpty) {
                               setState(() {
                                 _warningMessage = Strings.loginEmptyField;
