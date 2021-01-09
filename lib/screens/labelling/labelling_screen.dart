@@ -135,7 +135,7 @@ class _LabellingScreenStateInner extends State<LabellingScreenInner> {
     save.width = LabellingScreen.defaultWidth;
     save.height = LabellingScreen.defaultHeight;
 
-    Navigator.push(
+    Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (_) => LabellingScreen(

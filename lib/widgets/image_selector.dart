@@ -172,7 +172,6 @@ class _SelectorState extends State<Selector> {
     _width = _save.width;
     _offsetLeft = _save.offsetLeft;
     _offsetTop = _save.offsetTop;
-    print(_offsetLeft);
     return Column(
       children: [
         SizedBox(height: _offsetTop),
