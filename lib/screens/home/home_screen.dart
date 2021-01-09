@@ -8,6 +8,7 @@ import 'package:hack4environment/resources/c_colors.dart';
 import 'package:hack4environment/resources/images.dart';
 import 'package:hack4environment/resources/strings.dart';
 import 'package:hack4environment/screens/challenge/challenge_screen.dart';
+import 'package:hack4environment/screens/daily_quote_screen.dart';
 import 'package:hack4environment/screens/labelling/labelling_screen.dart';
 import 'package:hack4environment/services/users_repository.dart';
 import 'package:image_picker/image_picker.dart';
@@ -43,147 +44,165 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Padding(
             padding: const EdgeInsets.only(top: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Row(children: [
-                      SizedBox(width: 70),
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Column(
+                children: [
+                  Row(children: [
+                    SizedBox(width: 70),
+                    Text(
+                      Strings.homeRankingTitle,
+                      style: TextStyle(
+                          color: CColors.lightBlack,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Container(width: 50, child: _buildTopDropdown()),
+                    SizedBox(
+                      width: 20,
+                    )
+                  ]),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       Text(
-                        Strings.homeRankingTitle,
-                        style: TextStyle(
-                            color: CColors.lightBlack,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
+                        Strings.homePosition,
+                        style:
+                            TextStyle(fontSize: 16, color: CColors.lightBlack),
                       ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Container(width: 50, child: _buildTopDropdown()),
-                      SizedBox(
-                        width: 20,
-                      )
-                    ]),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          Strings.homePosition,
-                          style: TextStyle(
-                              fontSize: 16, color: CColors.lightBlack),
-                        ),
-                        SizedBox(
-                          width: 50,
-                        ),
-                        Text(
-                          Strings.homeUsername,
-                          style: TextStyle(
-                              fontSize: 16, color: CColors.lightBlack),
-                        ),
-                        SizedBox(
-                          width: 70,
-                        ),
-                        Text(
-                          Strings.homePoints,
-                          style: TextStyle(
-                              fontSize: 16, color: CColors.lightBlack),
-                        )
-                      ],
-                    ),
-                    Container(
-                      height: 240,
-                      width: 300,
-                      child: ListView(
-                        padding: EdgeInsets.all(5),
-                        children: topUsersChildren,
-                      ),
-                    ),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      GestureDetector(
-                          onTap: () {
-                            _pickFromCamera(context);
-                          },
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                Images.cameraLogo,
-                                height: 90,
-                                width: 90,
-                              ),
-                              //
-                              // size: 80,
-
-                              SizedBox(
-                                height: 6,
-                              ),
-                              Center(
-                                  child: Text(Strings.homeTakePhoto,
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold)))
-                            ],
-                          )),
                       SizedBox(
                         width: 50,
                       ),
-                      GestureDetector(
+                      Text(
+                        Strings.homeUsername,
+                        style:
+                            TextStyle(fontSize: 16, color: CColors.lightBlack),
+                      ),
+                      SizedBox(
+                        width: 70,
+                      ),
+                      Text(
+                        Strings.homePoints,
+                        style:
+                            TextStyle(fontSize: 16, color: CColors.lightBlack),
+                      )
+                    ],
+                  ),
+                  Container(
+                    height: 240,
+                    width: 300,
+                    child: ListView(
+                      padding: EdgeInsets.all(5),
+                      children: topUsersChildren,
+                    ),
+                  ),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    GestureDetector(
                         onTap: () {
-                          _pickFromGallery(context);
+                          _pickFromCamera(context);
                         },
                         child: Column(
                           children: [
                             Image.asset(
-                              Images.galleryLogo,
+                              Images.cameraLogo,
                               height: 90,
                               width: 90,
                             ),
+                            //
+                            // size: 80,
+
                             SizedBox(
                               height: 6,
                             ),
                             Center(
-                                child: Text(Strings.homeMyPhotos,
+                                child: Text(Strings.homeTakePhoto,
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold)))
                           ],
-                        ),
+                        )),
+                    SizedBox(
+                      width: 50,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _pickFromGallery(context);
+                      },
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            Images.galleryLogo,
+                            height: 90,
+                            width: 90,
+                          ),
+                          SizedBox(
+                            height: 6,
+                          ),
+                          Center(
+                              child: Text(Strings.homeMyPhotos,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)))
+                        ],
                       ),
-                      SizedBox(
-                        width: 50,
+                    ),
+                    SizedBox(
+                      width: 50,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, ChallengeScreen.routeName);
+                      },
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            Images.trophyLogo,
+                            height: 80,
+                            width: 80,
+                          ),
+                          SizedBox(
+                            height: 6,
+                          ),
+                          Center(
+                              child: Text(Strings.homeChallenge,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)))
+                        ],
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, ChallengeScreen.routeName);
-                        },
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              Images.trophyLogo,
-                              height: 80,
-                              width: 80,
-                            ),
-                            SizedBox(
-                              height: 6,
-                            ),
-                            Center(
-                                child: Text(Strings.homeChallenge,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)))
-                          ],
-                        ),
-                      )
+                    )
+                  ]),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, DailyQuoteScreen.routeName);
+                    },
+                    child: Row(
+                        children: [
+                      Image.asset(
+                        Images.quoteLogo,
+                        height: 120,
+                        width: 120,
+                      ),
+                      // SizedBox(
+                      //   width: 10,
+                      // ),
+                      Center(
+                          child: Text(Strings.quoteOfTheDay,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold)))
                     ]),
-                  ],
-                )
-              ],
-            )));
+                  ),
+                ],
+              ),
+            ])));
   }
 
   void _pickFromGallery(BuildContext context) async {

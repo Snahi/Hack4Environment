@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hack4environment/resources/c_colors.dart';
 import 'package:hack4environment/screens/challenge/challenge_screen.dart';
+import 'package:hack4environment/screens/daily_quote_screen.dart';
 import 'package:hack4environment/screens/home/home_screen.dart';
 import 'package:hack4environment/screens/labelling/labelling_screen.dart';
 import 'package:hack4environment/screens/login/login_screen.dart';
@@ -25,6 +27,7 @@ class MyApp extends StatelessWidget {
         SignUpScreen.routeName: (_) => SignUpScreen(),
         HomeScreen.routeName: (_) => HomeScreen(),
         ChallengeScreen.routeName: (_) => ChallengeScreen(),
+        DailyQuoteScreen.routeName: (_) => DailyQuoteScreen()
       },
       onGenerateRoute: (settings) {
         switch (settings.name) {

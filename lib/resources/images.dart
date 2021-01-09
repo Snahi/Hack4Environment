@@ -10,4 +10,5 @@ class Images {
   static String challenge = 'assets/images/challenge.png';
   static String challengeSent = 'assets/images/challenge_sent.jpg';
   static String compete = 'assets/images/compete.jpg';
+  static String quoteLogo = 'assets/images/quote_logo.jpg';
 }

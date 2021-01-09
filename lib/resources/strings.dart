@@ -34,6 +34,8 @@ class Strings {
       'Congratulations, you have just received 5 points!';
   static const String challengeUser = 'Challenge another user!';
   static const String challengeSent = 'Challenge Sent!';
+  static const String quoteOfTheDay = 'Quote for you';
+  static const String imageName = 'assets/images/environmentquotes';
   static const String waitForResponse =
       'Wait till your opponent accepts and take as many good photos as you can. The challenge lasts one month!';
 
