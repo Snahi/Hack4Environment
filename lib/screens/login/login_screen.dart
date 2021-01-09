@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:hack4environment/models/user.dart';
+import 'package:hack4environment/resources/api.dart';
 import 'package:hack4environment/resources/c_colors.dart';
 import 'package:hack4environment/resources/images.dart';
 import 'package:hack4environment/resources/strings.dart';
 import 'package:hack4environment/screens/home/home_screen.dart';
 import 'package:hack4environment/screens/signup/signup_screen.dart';
+import 'package:dio/dio.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = 'LoginScreen';
@@ -81,10 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _usernameTextFieldController,
                         autocorrect: true,
                         decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.person,
-                             color: CColors.darkPurple
-                          ),
+                          prefixIcon:
+                              Icon(Icons.person, color: CColors.darkPurple),
                           hintText: Strings.loginUsernameHint,
                           hintStyle: TextStyle(color: CColors.gray),
                           filled: true,
@@ -128,10 +129,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         autocorrect: true,
                         obscureText: true,
                         decoration: InputDecoration(
-                          prefixIcon: Icon(
-                              Icons.vpn_key_rounded,
-                              color: CColors.darkPurple
-                          ),
+                          prefixIcon: Icon(Icons.vpn_key_rounded,
+                              color: CColors.darkPurple),
                           hintText: Strings.loginPasswordHint,
                           hintStyle: TextStyle(color: CColors.gray),
                           filled: true,
@@ -161,6 +160,63 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(
                       height: 30,
                     ),
+                    // ProgressButton.icon(iconedButtons: {
+                    //   ButtonState.idle:
+                    //       IconedButton(
+                    //           text: "Send",
+                    //           icon: Icon(Icons.send,color: Colors.white),
+                    //           color: Colors.deepPurple.shade500),
+                    //   ButtonState.loading:
+                    //   IconedButton(
+                    //       text: "Loading",
+                    //       color: Colors.deepPurple.shade700),
+                    //   ButtonState.fail:
+                    //   IconedButton(
+                    //       text: "Failed",
+                    //       icon: Icon(Icons.cancel,color: Colors.white),
+                    //       color: Colors.red.shade300),
+                    //   ButtonState.success:
+                    //   IconedButton(
+                    //       text: "Success",
+                    //       icon: Icon(Icons.check_circle,color: Colors.white,),
+                    //       color: Colors.green.shade400)
+                    // },
+                    //     onPressed: () {},
+                    //     state: ButtonState.idle)
+                    // ,
+                    // ProgressButton(
+                    //   stateWidgets: {
+                    //     ButtonState.idle: Text(
+                    //       Strings.loginSignIn,
+                    //       style: TextStyle(
+                    //           color: Colors.white, fontWeight: FontWeight.w500),
+                    //     ),
+                    //     ButtonState.loading: Text(
+                    //       "Loading",
+                    //       style: TextStyle(
+                    //           color: Colors.white, fontWeight: FontWeight.w500),
+                    //     ),
+                    //     ButtonState.fail: Text(
+                    //       "Fail",
+                    //       style: TextStyle(
+                    //           color: Colors.white, fontWeight: FontWeight.w500),
+                    //     ),
+                    //     ButtonState.success: Text(
+                    //       "Success",
+                    //       style: TextStyle(
+                    //           color: Colors.white, fontWeight: FontWeight.w500),
+                    //     )
+                    //   },
+                    //   stateColors: {
+                    //     ButtonState.idle: Colors.grey.shade400,
+                    //     ButtonState.loading: Colors.blue.shade300,
+                    //     ButtonState.fail: Colors.red.shade300,
+                    //     ButtonState.success: Colors.green.shade400,
+                    //   },
+                    //   onPressed: () {},
+                    //   state: ButtonState.idle,
+                    // ),
+
                     FlatButton(
                         height: 50,
                         padding: EdgeInsets.only(
@@ -171,24 +227,19 @@ class _LoginScreenState extends State<LoginScreen> {
                             side:
                                 BorderSide(width: 2, color: CColors.lightBlack),
                             borderRadius: BorderRadius.circular(20)),
-                        onPressed: () {
-                          String username = "User";
-                          String password = "1234";
+                        onPressed: () async {
+                          String username = _usernameTextFieldController.text;
+                          String password = _passwordTextFieldController.text;
 
-                          String usernameTextFieldText =
-                              _usernameTextFieldController.text;
-                          String passwordTextFieldText =
-                              _passwordTextFieldController.text;
-
-                          if (usernameTextFieldText.isEmpty ||
-                              passwordTextFieldText.isEmpty) {
-                            if (usernameTextFieldText.isEmpty) {
+                          if (username.isEmpty || password.isEmpty) {
+                            if (username.isEmpty) {
                               setState(() {
                                 _warningMessage = Strings.loginEmptyField;
                                 _usernameTextFieldBorderColor = CColors.red;
                                 _usernameWarningVisibility = true;
                               });
-                            } if (passwordTextFieldText.isEmpty) {
+                            }
+                            if (password.isEmpty) {
                               setState(() {
                                 _warningMessage = Strings.loginEmptyField;
                                 _passwordTextFieldBorderColor = CColors.red;
@@ -196,17 +247,31 @@ class _LoginScreenState extends State<LoginScreen> {
                               });
                             }
                           } else {
-                            if (username == usernameTextFieldText &&
-                                password == passwordTextFieldText) {
-                              Navigator.pushNamed(
-                                  context, HomeScreen.routeName);
-                              print("Logged in");
-                            } else {
-                              setState(() {
-                                _warningMessage =
-                                    Strings.loginWrongUsernameOrPassword;
-                                _usernameWarningVisibility = true;
-                              });
+                            Dio dio = Dio();
+
+                            User user = User(username, "", password);
+
+                            try {
+                              print("USER DATA: ${user.toJsonLogin()}");
+                              var response = await dio.post(Api.urlLogin,
+                                  data: user.toJsonLogin());
+                              if (response.statusCode == 201) {
+                                Navigator.pushNamed(
+                                    context, HomeScreen.routeName);
+                                print("Logged in");
+                              } else {
+                                print("STATUS MESSAGE: " +
+                                    response.statusMessage);
+                                setState(() {
+                                  _warningMessage =
+                                      Strings.loginWrongUsernameOrPassword;
+                                  _usernameWarningVisibility = true;
+                                  _usernameTextFieldBorderColor = CColors.red;
+                                  _passwordTextFieldBorderColor = CColors.red;
+                                });
+                              }
+                            } catch (e) {
+                              print("LOGIN NOT SUCCESSFUL: $e");
                             }
                           }
                         },

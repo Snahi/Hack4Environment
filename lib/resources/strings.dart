@@ -16,6 +16,7 @@ class Strings {
   static const String loginWrongUsernameOrPassword =
       'Wrong username or password! Try again.';
   static const String signUpText = 'Sign Up';
+  static const String signUpCreateAccount = 'Create Account';
   static const String signUpEmailHintText = 'Email';
   static const String signUpRepeatPasswordHintText = 'Repeat Password';
   static const String signUpUsernameExits =
@@ -30,6 +31,10 @@ class Strings {
   static const String photoUploadedCaption = 'Photo uploaded!';
   static const String photoUploadedDesc =
       'Congratulations, you have just received 5 points!';
+  static const String challengeUser = 'Challenge another user!';
+  static const String challengeSent = 'Challenge Sent!';
+  static const String waitForResponse =
+      'Wait till your opponent accepts and take as many good photos as you can. The challenge lasts one month!';
 
   static const labels = [
     'bio',

@@ -5,4 +5,6 @@ class Images {
   static String takePhoto = 'assets/images/take_photo.png';
   static String error = 'assets/images/error.png';
   static String imageSent = 'assets/images/image_sent.jpg';
+  static String challenge = 'assets/images/challenge.png';
+  static String challengeSent = 'assets/images/challenge_sent.jpg';
 }
