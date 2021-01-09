@@ -1,3 +1,4 @@
+import 'package:hack4environment/models/challenge.dart';
 import 'package:hack4environment/models/user.dart';
 
 class UsersRepository {
@@ -15,7 +16,15 @@ class UsersRepository {
     ];
   }
 
-  Future<bool> challengeUser(String username) async {
+  Future<bool> sendChallenge(Challenge challenge) async {
+    // TODO implement
     return true;
+  }
+
+  Future<List<Challenge>> getChallenges() async {
+    return [
+      Challenge('user2', 'user1'),
+      Challenge('user3', 'user1')
+    ];
   }
 }

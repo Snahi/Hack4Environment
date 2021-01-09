@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hack4environment/screens/challenge/challenge_screen.dart';
 import 'package:hack4environment/screens/home/home_screen.dart';
 import 'package:hack4environment/screens/labelling/labelling_screen.dart';
 import 'package:hack4environment/screens/login/login_screen.dart';
@@ -19,12 +18,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.lightGreen,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: ChallengeScreen.routeName,
+      initialRoute: LoginScreen.routeName,
       routes: {
         LoginScreen.routeName: (_) => LoginScreen(),
         SignUpScreen.routeName: (_) => SignUpScreen(),
         HomeScreen.routeName: (_) => HomeScreen(),
-        ChallengeScreen.routeName: (_) => ChallengeScreen(),
       },
       onGenerateRoute: (settings) {
         switch (settings.name) {

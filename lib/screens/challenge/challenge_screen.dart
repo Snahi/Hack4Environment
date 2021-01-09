@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hack4environment/models/challenge.dart';
 import 'package:hack4environment/models/user.dart';
 import 'package:hack4environment/resources/images.dart';
 import 'package:hack4environment/resources/strings.dart';
+import 'package:hack4environment/screens/home/home_screen.dart';
 import 'package:hack4environment/services/users_repository.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 
 // <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Fre
+// <a href='https://www.freepik.com/vectors/abstract'>Abstract vector created by pch.vector - www.freepik.com</a>
 
 class ChallengeScreen extends StatefulWidget {
   static const String routeName = 'ChallengeScreen';
@@ -13,7 +17,8 @@ class ChallengeScreen extends StatefulWidget {
   _ChallengeScreenState createState() => _ChallengeScreenState();
 }
 
-class _ChallengeScreenState extends State<ChallengeScreen> {
+class _ChallengeScreenState extends State<ChallengeScreen>
+    with TickerProviderStateMixin {
   final UsersRepository _usersRepo = UsersRepository();
   Future<List<User>> usersFuture;
   String searchedUser;
@@ -46,7 +51,11 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
         body: ListView.builder(
           itemCount: searchedUser == null || searchedUser.isEmpty
               ? users.length
-              : (_users.contains(searchedUser) ? 2 : 1),
+              : (_users
+                      .where((element) => element.username == searchedUser)
+                      .isNotEmpty
+                  ? 2
+                  : 1),
           itemBuilder: (_, idx) =>
               idx == 0 ? SearchCard(_searchUser) : _buildTile(users[idx]),
         ),
@@ -54,35 +63,25 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
 
   Widget _buildTile(User user) {
     if (searchedUser != null && searchedUser.isNotEmpty) {
-      return Card(
-        child: ListTile(
-            title: Text(searchedUser),
-            trailing: GestureDetector(
-              onTap: () {
-                _sendChallenge(user.username);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Image.asset(Images.challenge),
-              ),
-            )),
-      );
+      return _buildTileByName(searchedUser);
     } else {
-      return Card(
-        child: ListTile(
-            title: Text(user.username),
-            trailing: GestureDetector(
-              onTap: () {
-                _sendChallenge(user.username);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Image.asset(Images.challenge),
-              ),
-            )),
-      );
+      return _buildTileByName(user.username);
     }
   }
+
+  Widget _buildTileByName(String name) => Card(
+        child: ListTile(
+            title: Text(name),
+            trailing: GestureDetector(
+              onTap: () {
+                _sendChallenge(name);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Image.asset(Images.challenge),
+              ),
+            )),
+      );
 
   void _searchUser(String username) {
     setState(() {
@@ -90,10 +89,25 @@ class _ChallengeScreenState extends State<ChallengeScreen> {
     });
   }
 
-  Future<void> updateList(String username) {}
-
   void _sendChallenge(String username) {
-    print(username);
+    // TODO sender
+    UsersRepository().sendChallenge(Challenge('user1', 'user2'));
+    showDialog(
+        context: context,
+        builder: (_) => AssetGiffyDialog(
+              image: Image.asset(Images.challengeSent),
+              title: Text(
+                Strings.challengeSent,
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+              ),
+              description: Text(Strings.waitForResponse),
+              entryAnimation: EntryAnimation.DEFAULT,
+              onOkButtonPressed: () {
+                Navigator.popUntil(
+                    context, ModalRoute.withName(HomeScreen.routeName));
+              },
+              onlyOkButton: true,
+            ));
   }
 }
 
