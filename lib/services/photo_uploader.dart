@@ -41,7 +41,7 @@ class PhotoUploader {
   static const String paramBoundingBoxes = 'boundingBoxes';
   static const String paramLabels = 'labels';
   static const String apiUrl =
-      'http://ec2-18-157-179-222.eu-central-1.compute.amazonaws.com/api/images';
+      'http://ec2-3-121-223-217.eu-central-1.compute.amazonaws.com/api/images';
 
   static Future<bool> upload(String imgPath, List<BoundingBox> boxes) async {
     bool success = false;
@@ -56,7 +56,7 @@ class PhotoUploader {
     });
     try {
       var response = await dio.post(apiUrl, data: formData);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         success = true;
       } else {
         print('error in api query, statusCode: ${response.statusCode}');
