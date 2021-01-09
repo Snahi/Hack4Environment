@@ -9,5 +9,16 @@ class Strings {
   static const String loginSignUp = 'Sign up';
   static const String loginForgotPassword = 'Forgot password?';
   static const String loginEmptyField = 'This field must not be empty!';
-  static const String loginWrongUsernameOrPassword = 'Wrong username or password! Try again.';
+  static const String loginWrongUsernameOrPassword =
+      'Wrong username or password! Try again.';
+  static const String submitPhoto = 'Submit';
+  static const String nextLabel = 'Next label';
+
+  static const labels = [
+    'bio',
+    'paper',
+    'plastic & metal',
+    'glass',
+    'mixed',
+  ];
 }
