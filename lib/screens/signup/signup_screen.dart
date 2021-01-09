@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hack4environment/models/user.dart';
 import 'package:hack4environment/resources/api.dart';
 import 'package:hack4environment/resources/c_colors.dart';
 import 'package:hack4environment/resources/images.dart';
@@ -389,25 +390,4 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ])))));
   }
 
-}
-
-class User {
-  final String username;
-  final String email;
-  final String password;
-
-  User(this.username, this.email, this.password);
-
-
-  User.fromJson(Map<String, dynamic> json)
-      : username = json['usernname'],
-        email = json['email'],
-        password = json['password'];
-
-  Map<String, dynamic> toJson() =>
-      {
-        'username': username,
-        'email': email,
-        'password' : password
-      };
 }
