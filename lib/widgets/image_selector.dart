@@ -1,18 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hack4environment/models/bounding_box.dart';
+import 'package:provider/provider.dart';
 
-class Selection {
-  final double x;
-  final double y;
-  final double width;
-  final double height;
+class SelectorPosition {
+  double width;
+  double height;
+  double offsetLeft = 0;
+  double offsetTop = 0;
 
-  Selection({
-    this.x,
-    this.y,
+  SelectorPosition({
     this.width,
     this.height,
+    this.offsetLeft,
+    this.offsetTop,
   });
 }
 
@@ -60,7 +62,7 @@ class Clipper extends StatelessWidget {
         ));
   }
 
-  Selection getSelection() {
+  BoundingBox getSelection() {
     // get image absolute positions
     final RenderBox imgBox =
         _imageContainerKey.currentContext.findRenderObject();
@@ -90,13 +92,16 @@ class Clipper extends StatelessWidget {
     final width = selectorWidth / imgWidth;
     final height = selectorHeight / imgHeight;
 
-    return Selection(
+    return BoundingBox(
       x: x,
       y: y,
       width: width,
       height: height,
     );
   }
+
+  RenderBox getSelectorRenderBox() =>
+      _selectorKey.currentContext.findRenderObject();
 
   Size getImageSize() {
     // get image absolute positions
@@ -135,18 +140,39 @@ class Selector extends StatefulWidget {
       );
 }
 
+class SelectorSave {
+  double width;
+  double height;
+  double offsetLeft;
+  double offsetTop;
+
+  SelectorSave({
+    this.width,
+    this.height,
+    this.offsetLeft,
+    this.offsetTop,
+  });
+}
+
 class _SelectorState extends State<Selector> {
   double _width;
   double _height;
-  double _offsetLeft = 0.0;
-  double _offsetTop = 0.0;
+  double _offsetLeft;
+  double _offsetTop;
   bool _moveLeftSide = false;
   bool _moveTopSide = false;
+  SelectorSave _save;
 
   _SelectorState(this._width, this._height);
 
   @override
   Widget build(BuildContext context) {
+    _save = Provider.of<SelectorSave>(context, listen: false);
+    _height = _save.height;
+    _width = _save.width;
+    _offsetLeft = _save.offsetLeft;
+    _offsetTop = _save.offsetTop;
+    print(_offsetLeft);
     return Column(
       children: [
         SizedBox(height: _offsetTop),
@@ -199,8 +225,10 @@ class _SelectorState extends State<Selector> {
       var dx = dragDetails.delta.dx;
       if (_moveLeftSide) {
         if (_offsetLeft + dx >= 0) {
-          _offsetLeft += dx;
-          _width -= dx;
+          if (_width + dx + _offsetLeft < widget.getImageSize().width) {
+            _offsetLeft += dx;
+            _width -= dx;
+          }
         }
       } else {
         if (_width + dx + _offsetLeft <= widget.getImageSize().width) {
@@ -210,6 +238,8 @@ class _SelectorState extends State<Selector> {
       if (_width < widget.minWidth) {
         _width = widget.minWidth;
       }
+      _save.width = _width;
+      _save.offsetLeft = _offsetLeft;
     });
   }
 
@@ -218,8 +248,10 @@ class _SelectorState extends State<Selector> {
       var dy = dragDetails.delta.dy;
       if (_moveTopSide) {
         if (_offsetTop + dy >= 0) {
-          _offsetTop += dy;
-          _height -= dy;
+          if (_height + dy + _offsetTop < widget.getImageSize().height) {
+            _offsetTop += dy;
+            _height -= dy;
+          }
         }
       } else {
         if (_height + dy + _offsetTop <= widget.getImageSize().height) {
@@ -230,5 +262,8 @@ class _SelectorState extends State<Selector> {
         _height = widget.minHeight;
       }
     });
+
+    _save.height = _height;
+    _save.offsetTop = _offsetTop;
   }
 }
