@@ -1,12 +1,16 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hack4environment/resources/api.dart';
 import 'package:hack4environment/resources/c_colors.dart';
 import 'package:hack4environment/resources/images.dart';
 import 'package:hack4environment/resources/strings.dart';
 import 'package:hack4environment/screens/login/login_screen.dart';
+import 'package:dio/dio.dart';
+
 
 class SignUpScreen extends StatefulWidget {
-  static const String routeName = "SignupScreen";
+  static const String routeName = "SignUpScreen";
 
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
@@ -285,14 +289,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               side: BorderSide(
                                   width: 2, color: CColors.lightBlack),
                               borderRadius: BorderRadius.circular(20)),
-                          onPressed: () {
+                          onPressed: () async {
                             String username = _usernameTextFieldController.text;
                             String email = _emailTextFieldController.text;
                             String password = _passwordTextFieldController.text;
                             String password2 = _repeatPasswordTextFieldController
                                 .text;
 
+                            bool readyForSignUp = true;
+
                             if (username.isEmpty) {
+                              readyForSignUp = false;
                               setState(() {
                                 _usernameWarningVisibility = true;
                                 _usernameTextFieldBorderColor = CColors.red;
@@ -302,6 +309,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
 
                             if (email.isEmpty) {
+                              readyForSignUp = false;
                               setState(() {
                                 _emailTextFieldBorderColor = CColors.red;
                                 _emailWarningVisibility = true;
@@ -309,6 +317,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
 
                             if(password.isEmpty) {
+                              readyForSignUp = false;
                               setState(() {
                                 _passwordWarningVisibility = true;
                                 _passwordTextFieldBorderColor = CColors.red;
@@ -316,14 +325,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
 
                             if(password2.isEmpty) {
+                              readyForSignUp = false;
                               setState(() {
                                 _repeatPasswordWarningVisibility = true;
                                 _repeatPasswordTextFieldBorderColor = CColors.red;
                               });
                             }
 
-                            // /TODO
-                            // check if username exists
+                            if(readyForSignUp) {
+
+                              if(password == password2) {
+
+                                User user = User(username, email, password);
+
+                                Dio dio = Dio();
+
+                                var request = await dio.post(Api.urlRegister, data: user.toJson());
+
+                                if (request.statusCode == 400) {
+                                    _usernameWarning = Strings.signUpUsernameExits;
+                                    _usernameWarningVisibility = true;
+                                    _usernameTextFieldBorderColor = CColors.red;
+                                } else {
+                                  Navigator.pop(context);
+                                }
+                              }
+
+
+                            }
                           },
                           child: Text(
                             Strings.loginSignIn,
@@ -359,4 +388,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           )),
                     ])))));
   }
+
+}
+
+class User {
+  final String username;
+  final String email;
+  final String password;
+
+  User(this.username, this.email, this.password);
+
+
+  User.fromJson(Map<String, dynamic> json)
+      : username = json['usernname'],
+        email = json['email'],
+        password = json['password'];
+
+  Map<String, dynamic> toJson() =>
+      {
+        'username': username,
+        'email': email,
+        'password' : password
+      };
 }
