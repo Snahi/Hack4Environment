@@ -1,14 +1,21 @@
 class Strings {
-  static const String appName = 'app';
+  static const String appName = 'Hack4Environment';
   static const String homeScreenAppBar = 'Hack4Environment';
   static const String homeTakePhoto = 'Take photo';
   static const String homeUploadPhoto = 'Upload photo';
   static const String loginUsernameHint = 'Username';
   static const String loginPasswordHint = 'Password';
-  static const String loginSignIn = 'Sign in';
-  static const String loginSignUp = 'Sign up';
+  static const String loginSignIn = 'Sign In';
+  static const String loginSignUp = 'Sign Up';
   static const String loginForgotPassword = 'Forgot password?';
   static const String loginEmptyField = 'This field must not be empty!';
+  static const String loginWrongUsernameOrPassword = 'Wrong username or password! Try again.';
+  static const String signUpText = 'Sign Up';
+  static const String signUpEmailHintText = 'Email';
+  static const String signUpRepeatPasswordHintText = 'Repeat Password';
+  static const String signUpUsernameExits = 'This name has already been taken. Please select different user name.';
+  static const String signUpPasswordsNotTheSame = 'Passwords must be the same!';
+  static const String signUpGoBackText = 'Back';
   static const String loginWrongUsernameOrPassword =
       'Wrong username or password! Try again.';
   static const String submitPhoto = 'Submit';

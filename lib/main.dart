@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hack4environment/screens/home/home_screen.dart';
 import 'package:hack4environment/screens/login/login_screen.dart';
+import 'package:hack4environment/screens/signup/signup_screen.dart';
 import 'package:hack4environment/screens/take_photo/take_photo_screen.dart';
 
 void main() {
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       initialRoute: LoginScreen.routeName,
       routes: {
         LoginScreen.routeName: (_) => LoginScreen(),
+        SignUpScreen.routeName: (_) => SignUpScreen(),
         HomeScreen.routeName: (_) => HomeScreen(),
         TakePhotoScreen.routeName: (_) => TakePhotoScreen(),
       },
