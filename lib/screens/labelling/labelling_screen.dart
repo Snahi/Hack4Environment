@@ -53,13 +53,13 @@ class _LabellingScreenStateInner extends State<LabellingScreenInner> {
       interiorColor: const Color(0x95000000),
       borderColor: Colors.blue,
     );
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            _clipper,
-            Expanded(
-              child: Padding(
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Column(
+            children: [
+              _clipper,
+              Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -71,8 +71,8 @@ class _LabellingScreenStateInner extends State<LabellingScreenInner> {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

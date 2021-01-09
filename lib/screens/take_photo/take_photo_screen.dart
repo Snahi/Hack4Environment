@@ -77,9 +77,11 @@ class TakePhotoScreenState extends State<TakePhotoScreen> {
           Expanded(
               child: GestureDetector(
             onTap: _onTakePhotoClicked,
-            child: CircleAvatar(
-              child: Image.asset(Images.takePhoto),
-              radius: 36,
+            child: Center(
+              child: CircleAvatar(
+                child: Image.asset(Images.takePhoto),
+                radius: 36,
+              ),
             ),
           ))
         ],

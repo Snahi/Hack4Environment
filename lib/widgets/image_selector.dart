@@ -4,20 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hack4environment/models/bounding_box.dart';
 import 'package:provider/provider.dart';
 
-class SelectorPosition {
-  double width;
-  double height;
-  double offsetLeft = 0;
-  double offsetTop = 0;
-
-  SelectorPosition({
-    this.width,
-    this.height,
-    this.offsetLeft,
-    this.offsetTop,
-  });
-}
-
 class Clipper extends StatelessWidget {
   final GlobalKey _imageContainerKey = GlobalKey();
   final GlobalKey _selectorKey = GlobalKey();
@@ -38,7 +24,6 @@ class Clipper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        key: _imageContainerKey,
         width: double.infinity,
         color: Colors.black,
         child: Stack(
@@ -48,6 +33,7 @@ class Clipper extends StatelessWidget {
                 width: double.infinity,
                 child: Image.file(
                   File(imgPath),
+                  key: _imageContainerKey,
                   fit: BoxFit.fitWidth,
                 ),
               ),
