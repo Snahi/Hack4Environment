@@ -6,10 +6,10 @@ import 'package:hack4environment/resources/strings.dart';
 import 'package:hack4environment/screens/home/home_screen.dart';
 import 'package:hack4environment/screens/labelling/labelling_screen.dart';
 import 'package:hack4environment/services/photo_uploader.dart';
-import 'package:hack4environment/widgets/image_selector.dart';
-import 'package:provider/provider.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
+
+// <a href='https://www.freepik.com/vectors/business'>Business vector created by jcomp - www.freepik.com</a>
 
 class SelectCategoryScreen extends StatefulWidget {
   final String imgPath;
@@ -80,16 +80,33 @@ class _SelectCategoryScreenState extends State<SelectCategoryScreen> {
     setState(() {
       isNextButtonEnabled = false;
     });
+    widget.allBoxes.last.label = _selectedLabel;
     Future<bool> uploadFuture =
         PhotoUploader.upload(widget.imgPath, widget.allBoxes);
     uploadFuture.then((value) {
       if (value == true) {
         _btnController.success();
-        _goHome();
+        _showSuccessDialog();
       } else {
         _onError();
       }
     });
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+        context: context,
+        builder: (_) => AssetGiffyDialog(
+              image: Image.asset(Images.imageSent),
+              title: Text(
+                Strings.photoUploadedCaption,
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+              ),
+              description: Text(Strings.photoUploadedDesc),
+              entryAnimation: EntryAnimation.DEFAULT,
+              onOkButtonPressed: _goHome,
+              onlyOkButton: true,
+            ));
   }
 
   void _goHome() {
@@ -128,6 +145,7 @@ class _SelectCategoryScreenState extends State<SelectCategoryScreen> {
       );
 
   void _nextLabel() {
+    widget.allBoxes.last.label = _selectedLabel;
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(

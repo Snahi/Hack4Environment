@@ -4,6 +4,9 @@ import 'package:hack4environment/screens/labelling/select_category_screen.dart';
 import 'package:hack4environment/widgets/image_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
+import 'package:image/image.dart' as imag;
+import 'dart:math';
 
 class LabellingScreenArgs {
   final String imgPath;
@@ -46,11 +49,17 @@ class LabellingScreenInner extends StatefulWidget {
   LabellingScreenInner({@required this.imgPath, this.previousLabels});
 
   @override
-  _LabellingScreenStateInner createState() => _LabellingScreenStateInner();
+  _LabellingScreenStateInner createState() =>
+      _LabellingScreenStateInner(imgPath);
 }
 
 class _LabellingScreenStateInner extends State<LabellingScreenInner> {
   Clipper _clipper;
+  String imgPath;
+
+  _LabellingScreenStateInner(String imagePath) {
+    this.imgPath = cropImage(imagePath);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,22 +69,64 @@ class _LabellingScreenStateInner extends State<LabellingScreenInner> {
       borderColor: Colors.blue,
     );
     return Scaffold(
-      body: SafeArea(child: _clipper),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.check,
-          color: CColors.darkWhite,
-        ),
-        onPressed: () {
-          var allLabels = _addToLabels();
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (_) =>
-                      SelectCategoryScreen(widget.imgPath, allLabels)));
-        },
-      ),
+      body: SafeArea(
+          child: Column(
+        children: [
+          _clipper,
+          Expanded(
+              child: Center(
+            child: Container(
+              width: 100,
+              height: 100,
+              child: RawMaterialButton(
+                fillColor: CColors.vividGreen,
+                shape: CircleBorder(),
+                elevation: 4.0,
+                child: Icon(
+                  Icons.check,
+                  color: CColors.darkWhite,
+                  size: 60,
+                ),
+                onPressed: () {
+                  var allLabels = _addToLabels();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) =>
+                              SelectCategoryScreen(widget.imgPath, allLabels)));
+                },
+              ),
+            ),
+          ))
+        ],
+      )),
     );
+  }
+
+  String cropImage(String imgPath) {
+    imag.Image img = imag.decodeImage(File(imgPath).readAsBytesSync());
+    // get dimensions
+    int width = img.width;
+    int height = img.height;
+    int shorterSide = min(width, height);
+    int longerSide = max(width, height);
+    // find center
+    int nonZeroCord = (longerSide - shorterSide) ~/ 2;
+    // assign top left corner coordinates
+    int x, y;
+    if (width == shorterSide) {
+      x = 0;
+      y = nonZeroCord;
+    } else {
+      x = nonZeroCord;
+      y = 0;
+    }
+    // decrease size to [outputDimension]
+    img = imag.copyResize(img, width: shorterSide, height: shorterSide);
+    // save processed image
+    File(imgPath)..writeAsBytesSync(imag.encodeJpg(img));
+
+    return imgPath;
   }
 
   List<BoundingBox> _addToLabels() {
