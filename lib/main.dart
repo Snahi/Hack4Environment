@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hack4environment/screens/home/home_screen.dart';
+import 'package:hack4environment/screens/labelling/labelling_screen.dart';
 import 'package:hack4environment/screens/login/login_screen.dart';
 import 'package:hack4environment/screens/signup/signup_screen.dart';
-import 'package:hack4environment/screens/take_photo/take_photo_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,7 +23,23 @@ class MyApp extends StatelessWidget {
         LoginScreen.routeName: (_) => LoginScreen(),
         SignUpScreen.routeName: (_) => SignUpScreen(),
         HomeScreen.routeName: (_) => HomeScreen(),
-        TakePhotoScreen.routeName: (_) => TakePhotoScreen(),
+      },
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case LabellingScreen.routeName:
+            return MaterialPageRoute(
+              builder: (_) {
+                LabellingScreenArgs args = settings.arguments;
+                return LabellingScreen(
+                  imgPath: args.imgPath,
+                  previousLabels: args.previousLabels,
+                );
+              },
+              settings: RouteSettings(name: LabellingScreen.routeName),
+            );
+        }
+
+        return null;
       },
     );
   }

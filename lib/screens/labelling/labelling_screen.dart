@@ -5,6 +5,13 @@ import 'package:hack4environment/widgets/image_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+class LabellingScreenArgs {
+  final String imgPath;
+  final List<BoundingBox> previousLabels;
+
+  LabellingScreenArgs({@required this.imgPath, this.previousLabels});
+}
+
 class LabellingScreen extends StatelessWidget {
   static const String routeName = 'LabellingScreen';
   final String imgPath;
@@ -53,15 +60,7 @@ class _LabellingScreenStateInner extends State<LabellingScreenInner> {
       borderColor: Colors.blue,
     );
     return Scaffold(
-      body: SafeArea(
-          child: Column(
-        children: [
-          _clipper,
-          Expanded(
-            child: SizedBox(),
-          )
-        ],
-      )),
+      body: SafeArea(child: _clipper),
       floatingActionButton: FloatingActionButton(
         child: Icon(
           Icons.check,

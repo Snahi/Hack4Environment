@@ -46,6 +46,7 @@ class PhotoUploader {
   static Future<bool> upload(String imgPath, List<BoundingBox> boxes) async {
     bool success = false;
     Dio dio = Dio();
+    print(boxes);
     FormData formData = FormData.fromMap({
       paramImg: await MultipartFile.fromFile(imgPath),
       paramBoundingBoxes: jsonEncode(_convertBoxes(boxes),
