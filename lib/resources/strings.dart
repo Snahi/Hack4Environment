@@ -2,8 +2,9 @@ class Strings {
   static const String appName = 'Hack4Environment';
   static const String homeScreenAppBar = 'Hack4Environment';
   static const String homeTakePhoto = 'Take photo';
-  static const String homeUploadPhoto = 'Upload photo';
-  static const String homeRankingTitle = "Top 5 Users";
+  static const String homeMyPhotos = 'My photos';
+  static const String homeChallenge = 'Challenge \na friend';
+  static const String homeRankingTitle = "Top Users";
   static const String homePosition = "Rank";
   static const String homeUsername = "Name";
   static const String homePoints = "Points";
@@ -43,4 +44,6 @@ class Strings {
     'glass',
     'mixed',
   ];
+
+  static const topUsers = ['3', '5', '10', '20', '50'];
 }
