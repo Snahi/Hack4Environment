@@ -6,8 +6,6 @@ import 'package:hack4environment/resources/strings.dart';
 import 'package:hack4environment/screens/home/home_screen.dart';
 import 'package:hack4environment/screens/labelling/labelling_screen.dart';
 import 'package:hack4environment/services/photo_uploader.dart';
-import 'package:hack4environment/widgets/image_selector.dart';
-import 'package:provider/provider.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 
