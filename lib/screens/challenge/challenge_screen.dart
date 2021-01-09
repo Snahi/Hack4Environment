@@ -23,6 +23,7 @@ class _ChallengeScreenState extends State<ChallengeScreen>
   Future<List<User>> usersFuture;
   String searchedUser;
   List<User> _users;
+  int _days = 7;
 
   @override
   void initState() {
@@ -47,17 +48,18 @@ class _ChallengeScreenState extends State<ChallengeScreen>
   }
 
   Widget _buildContent(List<User> users) => Scaffold(
-        appBar: AppBar(),
-        body: ListView.builder(
-          itemCount: searchedUser == null || searchedUser.isEmpty
-              ? users.length
-              : (_users
-                      .where((element) => element.username == searchedUser)
-                      .isNotEmpty
-                  ? 2
-                  : 1),
-          itemBuilder: (_, idx) =>
-              idx == 0 ? SearchCard(_searchUser) : _buildTile(users[idx]),
+        body: SafeArea(
+          child: ListView.builder(
+            itemCount: searchedUser == null || searchedUser.isEmpty
+                ? users.length
+                : (_users
+                        .where((element) => element.username == searchedUser)
+                        .isNotEmpty
+                    ? 2
+                    : 1),
+            itemBuilder: (_, idx) =>
+                idx == 0 ? SearchCard(_searchUser) : _buildTile(users[idx]),
+          ),
         ),
       );
 
@@ -71,16 +73,37 @@ class _ChallengeScreenState extends State<ChallengeScreen>
 
   Widget _buildTileByName(String name) => Card(
         child: ListTile(
-            title: Text(name),
-            trailing: GestureDetector(
-              onTap: () {
-                _sendChallenge(name);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Image.asset(Images.challenge),
-              ),
-            )),
+          title: Text(name),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropdownButton<int>(
+                  value: _days,
+                  items: [7, 14, 30].map((int value) {
+                    return new DropdownMenuItem<int>(
+                      value: value,
+                      child: new Text(value.toString()),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _days = newValue;
+                    });
+                  }),
+              SizedBox(width: 8.0),
+              Text('days'),
+              GestureDetector(
+                onTap: () {
+                  _sendChallenge(name);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Image.asset(Images.challenge),
+                ),
+              )
+            ],
+          ),
+        ),
       );
 
   void _searchUser(String username) {
@@ -91,7 +114,7 @@ class _ChallengeScreenState extends State<ChallengeScreen>
 
   void _sendChallenge(String username) {
     // TODO sender
-    UsersRepository().sendChallenge(Challenge('user1', 'user2'));
+    UsersRepository().sendChallenge(Challenge('user1', 'user2', _days, null));
     showDialog(
         context: context,
         builder: (_) => AssetGiffyDialog(

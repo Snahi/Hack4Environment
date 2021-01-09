@@ -1,14 +1,18 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:hack4environment/models/challenge.dart';
 import 'package:hack4environment/resources/api.dart';
 import 'package:hack4environment/resources/c_colors.dart';
 import 'package:hack4environment/resources/images.dart';
 import 'package:hack4environment/resources/strings.dart';
+import 'package:hack4environment/screens/challenge/challenge_screen.dart';
 import 'package:hack4environment/screens/labelling/labelling_screen.dart';
+import 'package:hack4environment/services/users_repository.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 
+// <a href='https://www.freepik.com/vectors/people'>People vector created by pch.vector - www.freepik.com</a>
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = 'HomeScreen';
@@ -29,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _topUsers.add(RankUser("Staszkicjusz", 4, 100.0));
     _topUsers.add(RankUser("PanAdam", 5, 95.0));
     _topUsers.add(RankUser("CurrentUser", 40, 25.0));
-
+    _showChallenges();
     // Scaffold is a layout for the major Material Components.
     return Scaffold(
         appBar: AppBar(
@@ -55,9 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         width: 20,
                       ),
-                      Container(
-                        width: 50,
-                        child :_buildTopDropdown()),
+                      Container(width: 50, child: _buildTopDropdown()),
                       SizedBox(
                         width: 20,
                       ),
@@ -101,7 +103,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: ListView(
                         padding: EdgeInsets.all(5),
                         children: [
-
                           _getListItemContainer(_topUsers[0]),
                           SizedBox(
                             height: 2,
@@ -183,7 +184,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          _pickFromGallery(context);
+                          Navigator.pushNamed(
+                              context, ChallengeScreen.routeName);
                         },
                         child: Column(
                           children: [
@@ -299,24 +301,23 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   Widget _buildTopDropdown() => DropdownButton<String>(
-    value: _selectedTop,
-    isExpanded: true,
-    items: Strings.topUsers.map((String value) {
-      return new DropdownMenuItem<String>(
-        value: value,
-        child: new Text(value),
+        value: _selectedTop,
+        isExpanded: true,
+        items: Strings.topUsers.map((String value) {
+          return new DropdownMenuItem<String>(
+            value: value,
+            child: new Text(value),
+          );
+        }).toList(),
+        onChanged: (newValue) {
+          setState(() {
+            _selectedTop = newValue;
+          });
+        },
       );
-    }).toList(),
-    onChanged: (newValue) {
-      setState(() {
-        _selectedTop = newValue;
-      });
-    },
-  );
 
-   updateRanking() async {
+  updateRanking() async {
     Dio dio = Dio();
     _topUsers = new List();
     try {
@@ -328,6 +329,59 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _showChallenges() async {
+    String username = _getCurrentUserUsername();
+    List<Challenge> challenges =
+        await UsersRepository().getChallenges(username);
+
+    _showChallengeDialog(challenges, username);
+  }
+
+  void _showChallengeDialog(List<Challenge> challenges, String username) {
+    if (challenges.isNotEmpty) {
+      Challenge current = challenges.removeLast();
+      showDialog(
+          context: context,
+          builder: (_) => AssetGiffyDialog(
+                image: Image.asset(Images.compete),
+                title: Text(
+                  current.senderUsername + ' challenges you!',
+                  style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+                ),
+                description: Text(
+                    'The competition starts today. Take as many good pictures as possible in the nearest ${current.days} days.'),
+                entryAnimation: EntryAnimation.DEFAULT,
+                onOkButtonPressed: () {
+                  if (challenges.isNotEmpty) {
+                    _acceptChallenge(current, username);
+                    Navigator.pop(context);
+                    _showChallengeDialog(challenges, username);
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+                onCancelButtonPressed: () {
+                  if (challenges.isNotEmpty) {
+                    Navigator.pop(context);
+                    _showChallengeDialog(challenges, username);
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+                buttonOkText:
+                    Text('Accept', style: TextStyle(color: CColors.darkWhite)),
+                buttonCancelText:
+                    Text('Reject', style: TextStyle(color: CColors.darkWhite)),
+              ));
+    }
+  }
+
+  void _acceptChallenge(Challenge challenge, String receiver) {}
+
+  String _getCurrentUserUsername() {
+    // TODO implement
+    return 'user1';
+  }
 }
 
 class RankUser {

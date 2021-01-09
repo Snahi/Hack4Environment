@@ -21,10 +21,10 @@ class UsersRepository {
     return true;
   }
 
-  Future<List<Challenge>> getChallenges() async {
+  Future<List<Challenge>> getChallenges(String receiver) async {
     return [
-      Challenge('user2', 'user1'),
-      Challenge('user3', 'user1')
+      Challenge('user2', 'user1', 7, DateTime(2020, 1, 14)),
+      Challenge('user3', 'user1', 30, DateTime(2021, 1, 23))
     ];
   }
 }
