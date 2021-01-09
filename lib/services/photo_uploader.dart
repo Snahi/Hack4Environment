@@ -38,21 +38,24 @@ class _ServerLabel {
 
 class PhotoUploader {
   static const String paramImg = 'file';
-  static const String paramBoundingBoxes = 'boundingBoxes';
-  static const String paramLabels = 'labels';
+  static const String paramContent = 'content';
   static const String apiUrl =
       'http://ec2-3-121-223-217.eu-central-1.compute.amazonaws.com/api/images';
 
   static Future<bool> upload(String imgPath, List<BoundingBox> boxes) async {
     bool success = false;
     Dio dio = Dio();
-    print(boxes);
+    String content = '{"boundingBoxes":' +
+        jsonEncode(_convertBoxes(boxes),
+            toEncodable: (e) => (e as _ServerBoundingBox).toJson()) +
+        ',"labels":' +
+        jsonEncode(_getLabels(boxes),
+            toEncodable: (e) => (e as _ServerLabel).toJson()) +
+        '}';
+    print(content);
     FormData formData = FormData.fromMap({
       paramImg: await MultipartFile.fromFile(imgPath),
-      paramBoundingBoxes: jsonEncode(_convertBoxes(boxes),
-          toEncodable: (e) => (e as _ServerBoundingBox).toJson()),
-      paramLabels: jsonEncode(_getLabels(boxes),
-          toEncodable: (e) => (e as _ServerLabel).toJson()),
+      paramContent: content,
     });
     try {
       var response = await dio.post(apiUrl, data: formData);

@@ -28,6 +28,9 @@ class Strings {
   static const String oops = 'Ooops';
   static const String tryAgainLater =
       'Something went wrong. Please try again later.';
+  static const String photoUploadedCaption = 'Photo uploaded!';
+  static const String photoUploadedDesc =
+      'Congratulations, you have just received 5 points!';
   static const String challengeUser = 'Challenge another user!';
   static const String challengeSent = 'Challenge Sent!';
   static const String waitForResponse =
