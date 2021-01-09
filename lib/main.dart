@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hack4environment/screens/home/home_screen.dart';
+import 'package:hack4environment/screens/login/login_screen.dart';
 import 'package:hack4environment/screens/take_photo/take_photo_screen.dart';
 
 void main() {
@@ -13,11 +14,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.lightGreen,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: HomeScreen.routeName,
+      initialRoute: LoginScreen.routeName,
       routes: {
+        LoginScreen.routeName: (_) => LoginScreen(),
         HomeScreen.routeName: (_) => HomeScreen(),
         TakePhotoScreen.routeName: (_) => TakePhotoScreen(),
       },
