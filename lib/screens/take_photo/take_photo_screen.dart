@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:hack4environment/resources/images.dart';
 import 'package:hack4environment/screens/labelling/labelling_screen.dart';
 
 class TakePhotoScreen extends StatefulWidget {
@@ -56,7 +57,7 @@ class TakePhotoScreenState extends State<TakePhotoScreen> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               // If the Future is complete, display the preview.
-              return _buildCameraPreview(context);
+              return _buildContent();
             } else {
               // Otherwise, display a loading indicator.
               return Center(child: CircularProgressIndicator());
@@ -64,10 +65,24 @@ class TakePhotoScreenState extends State<TakePhotoScreen> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.camera_alt),
-        // Provide an onPressed callback.
-        onPressed: _onTakePhotoClicked,
+    );
+  }
+
+  Widget _buildContent() {
+    return SafeArea(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          _buildCameraPreview(context),
+          Expanded(
+              child: GestureDetector(
+            onTap: _onTakePhotoClicked,
+            child: CircleAvatar(
+              child: Image.asset(Images.takePhoto),
+              radius: 36,
+            ),
+          ))
+        ],
       ),
     );
   }
@@ -89,13 +104,15 @@ class TakePhotoScreenState extends State<TakePhotoScreen> {
 
   Widget _buildCameraPreview(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final deviceRatio = size.width / size.height;
-    return Transform.scale(
-      scale: _controller.value.aspectRatio / deviceRatio,
-      child: Center(
-        child: AspectRatio(
-          aspectRatio: _controller.value.aspectRatio,
-          child: CameraPreview(_controller),
+    final deviceRatio = size.width / (size.height * 0.7);
+    return Container(
+      child: Transform.scale(
+        scale: _controller.value.aspectRatio / deviceRatio,
+        child: Center(
+          child: AspectRatio(
+            aspectRatio: _controller.value.aspectRatio,
+            child: CameraPreview(_controller),
+          ),
         ),
       ),
     );

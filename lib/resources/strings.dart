@@ -16,4 +16,16 @@ class Strings {
   static const String signUpUsernameExits = 'This name has already been taken. Please select different user name.';
   static const String signUpPasswordsNotTheSame = 'Passwords must be the same!';
   static const String signUpGoBackText = 'Back';
+  static const String loginWrongUsernameOrPassword =
+      'Wrong username or password! Try again.';
+  static const String submitPhoto = 'Submit';
+  static const String nextLabel = 'Next label';
+
+  static const labels = [
+    'bio',
+    'paper',
+    'plastic & metal',
+    'glass',
+    'mixed',
+  ];
 }
