@@ -52,7 +52,6 @@ class PhotoUploader {
         jsonEncode(_getLabels(boxes),
             toEncodable: (e) => (e as _ServerLabel).toJson()) +
         '}';
-    print(content);
     FormData formData = FormData.fromMap({
       paramImg: await MultipartFile.fromFile(imgPath),
       paramContent: content,
