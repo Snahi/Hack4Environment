@@ -42,6 +42,8 @@ dev_dependencies:
   giffy_dialog: ^1.8.0
   image_picker: ^0.6.7+21
   progress_state_button: ^1.0.2
+  pull_to_refresh: ^1.6.3
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,18 +1,25 @@
-import 'dart:developer';
-import 'dart:ffi';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:hack4environment/resources/api.dart';
 import 'package:hack4environment/resources/c_colors.dart';
 import 'package:hack4environment/resources/images.dart';
 import 'package:hack4environment/resources/strings.dart';
 import 'package:hack4environment/screens/labelling/labelling_screen.dart';
 import 'package:image_picker/image_picker.dart';
 
-class HomeScreen extends StatelessWidget {
+
+class HomeScreen extends StatefulWidget {
   static const String routeName = 'HomeScreen';
 
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   List<RankUser> _topUsers = [];
+  String _selectedTop = Strings.topUsers[1];
 
   @override
   Widget build(BuildContext context) {
@@ -36,23 +43,39 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    Text(
-                      Strings.homeRankingTitle,
-                      style: TextStyle(
-                          color: CColors.lightBlack,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    Row(children: [
+                      SizedBox(width: 90),
+                      Text(
+                        Strings.homeRankingTitle,
+                        style: TextStyle(
+                            color: CColors.lightBlack,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Container(
+                        width: 50,
+                        child :_buildTopDropdown()),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      GestureDetector(
+                          child: Icon(Icons.refresh_rounded,
+                              color: CColors.darkGreen, size: 20),
+                          onTap: () {
+                            updateRanking();
+                          }),
+                    ]),
+                    SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           Strings.homePosition,
                           style: TextStyle(
-                              fontSize: 18, color: CColors.lightBlack),
+                              fontSize: 16, color: CColors.lightBlack),
                         ),
                         SizedBox(
                           width: 50,
@@ -60,24 +83,25 @@ class HomeScreen extends StatelessWidget {
                         Text(
                           Strings.homeUsername,
                           style: TextStyle(
-                              fontSize: 18, color: CColors.lightBlack),
+                              fontSize: 16, color: CColors.lightBlack),
                         ),
                         SizedBox(
-                          width: 50,
+                          width: 70,
                         ),
                         Text(
                           Strings.homePoints,
                           style: TextStyle(
-                              fontSize: 18, color: CColors.lightBlack),
+                              fontSize: 16, color: CColors.lightBlack),
                         )
                       ],
                     ),
                     Container(
-                      height: 280,
+                      height: 240,
                       width: 300,
                       child: ListView(
                         padding: EdgeInsets.all(5),
                         children: [
+
                           _getListItemContainer(_topUsers[0]),
                           SizedBox(
                             height: 2,
@@ -111,8 +135,8 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               Image.asset(
                                 Images.cameraLogo,
-                                height: 100,
-                                width: 100,
+                                height: 90,
+                                width: 90,
                               ),
                               //
                               // size: 80,
@@ -138,15 +162,42 @@ class HomeScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             Image.asset(
-                              Images.uploadLogo,
-                              height: 100,
-                              width: 100,
+                              Images.galleryLogo,
+                              height: 90,
+                              width: 90,
                             ),
                             SizedBox(
                               height: 6,
                             ),
                             Center(
-                                child: Text(Strings.homeUploadPhoto,
+                                child: Text(Strings.homeMyPhotos,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold)))
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 50,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          _pickFromGallery(context);
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              Images.trophyLogo,
+                              height: 80,
+                              width: 80,
+                            ),
+                            SizedBox(
+                              height: 6,
+                            ),
+                            Center(
+                                child: Text(Strings.homeChallenge,
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
@@ -193,7 +244,7 @@ class HomeScreen extends StatelessWidget {
     }
 
     return Container(
-      height: 40,
+      height: 30,
       width: 300,
       decoration: BoxDecoration(
         color: itemColor,
@@ -212,7 +263,7 @@ class HomeScreen extends StatelessWidget {
               child: Text(
                 rankUser._rankPos.toString(),
                 style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: CColors.lightBlack),
               )),
@@ -224,7 +275,7 @@ class HomeScreen extends StatelessWidget {
             rankUser._user,
             style: TextStyle(
               color: CColors.lightBlack,
-              fontSize: 16,
+              fontSize: 14,
             ),
           )),
           SizedBox(
@@ -236,14 +287,47 @@ class HomeScreen extends StatelessWidget {
               child: Text(
                 rankUser._points.toString(),
                 style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: CColors.lightBlack),
-              ))
+              )),
+          SizedBox(
+            width: 10,
+          )
         ],
       ),
     );
   }
+
+
+  Widget _buildTopDropdown() => DropdownButton<String>(
+    value: _selectedTop,
+    isExpanded: true,
+    items: Strings.topUsers.map((String value) {
+      return new DropdownMenuItem<String>(
+        value: value,
+        child: new Text(value),
+      );
+    }).toList(),
+    onChanged: (newValue) {
+      setState(() {
+        _selectedTop = newValue;
+      });
+    },
+  );
+
+   updateRanking() async {
+    Dio dio = Dio();
+    _topUsers = new List();
+    try {
+      var response = await dio.get(Api.urlRanking + 5.toString());
+
+      print(response);
+    } catch (e) {
+      print(e);
+    }
+  }
+
 }
 
 class RankUser {
