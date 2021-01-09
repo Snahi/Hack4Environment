@@ -6,7 +6,8 @@ import 'package:flutter/painting.dart';
 import 'package:hack4environment/resources/c_colors.dart';
 import 'package:hack4environment/resources/images.dart';
 import 'package:hack4environment/resources/strings.dart';
-import 'package:hack4environment/screens/take_photo/take_photo_screen.dart';
+import 'package:hack4environment/screens/labelling/labelling_screen.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String routeName = 'HomeScreen';
@@ -103,8 +104,9 @@ class HomeScreen extends StatelessWidget {
                     ),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       GestureDetector(
-                          onTap: () => Navigator.pushNamed(
-                              context, TakePhotoScreen.routeName),
+                          onTap: () {
+                            _pickFromCamera(context);
+                          },
                           child: Column(
                             children: [
                               Image.asset(
@@ -129,29 +131,58 @@ class HomeScreen extends StatelessWidget {
                       SizedBox(
                         width: 50,
                       ),
-                      Column(
-                        children: [
-                          Image.asset(
-                            Images.uploadLogo,
-                            height: 100,
-                            width: 100,
-                          ),
-                          SizedBox(
-                            height: 6,
-                          ),
-                          Center(
-                              child: Text(Strings.homeUploadPhoto,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold)))
-                        ],
+                      GestureDetector(
+                        onTap: () {
+                          _pickFromGallery(context);
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              Images.uploadLogo,
+                              height: 100,
+                              width: 100,
+                            ),
+                            SizedBox(
+                              height: 6,
+                            ),
+                            Center(
+                                child: Text(Strings.homeUploadPhoto,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold)))
+                          ],
+                        ),
                       )
                     ]),
                   ],
                 )
               ],
             )));
+  }
+
+  void _pickFromGallery(BuildContext context) async {
+    try {
+      final pickedFile =
+          await ImagePicker().getImage(source: ImageSource.gallery);
+      String imgPath = pickedFile.path;
+      Navigator.pushNamed(context, LabellingScreen.routeName,
+          arguments: LabellingScreenArgs(imgPath: imgPath));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _pickFromCamera(BuildContext context) async {
+    try {
+      final pickedFile =
+          await ImagePicker().getImage(source: ImageSource.camera);
+      String imgPath = pickedFile.path;
+      Navigator.pushNamed(context, LabellingScreen.routeName,
+          arguments: LabellingScreenArgs(imgPath: imgPath));
+    } catch (e) {
+      print(e);
+    }
   }
 
   Widget _getListItemContainer(RankUser rankUser) {

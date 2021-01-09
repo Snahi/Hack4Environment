@@ -3,6 +3,7 @@ import 'package:hack4environment/models/bounding_box.dart';
 import 'package:hack4environment/resources/c_colors.dart';
 import 'package:hack4environment/resources/images.dart';
 import 'package:hack4environment/resources/strings.dart';
+import 'package:hack4environment/screens/home/home_screen.dart';
 import 'package:hack4environment/screens/labelling/labelling_screen.dart';
 import 'package:hack4environment/services/photo_uploader.dart';
 import 'package:hack4environment/widgets/image_selector.dart';
@@ -92,9 +93,7 @@ class _SelectCategoryScreenState extends State<SelectCategoryScreen> {
   }
 
   void _goHome() {
-    Navigator.pop(context);
-    Navigator.pop(context);
-    Navigator.pop(context);
+    Navigator.popUntil(context, ModalRoute.withName(HomeScreen.routeName));
   }
 
   void _onError() {
